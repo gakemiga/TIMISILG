@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMISILG Store - Mockup Final</title>
+    <style>
+        /* --- PALETA NEUTRA & MODERNA (Unissex) --- */
+        :root {
+            --primary: #0f172a;       /* Azul Marinho Quase Preto */
+            --primary-light: #1e293b; /* Cinza Azulado Escuro */
+            --accent: #2563eb;        /* Azul Royal (Ação) */
+            --bg: #f1f5f9;            /* Cinza Gelo */
+            --white: #ffffff;
+            --text-main: #334155;     /* Cinza Escuro */
+            --text-light: #64748b;    /* Cinza Médio */
+            --danger: #ef4444;        /* Vermelho */
+        }
+
+        /* --- RESET & BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+        body { background-color: #cbd5e1; display: flex; justify-content: center; min-height: 100vh; align-items: center; }
+        
+        /* SHELL DO APP */
+        .app-shell {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 850px;
+            background-color: var(--bg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 6px solid #1e293b;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            background-color: var(--primary);
+            padding: 20px;
+            color: var(--white);
+            position: sticky; top: 0; z-index: 10;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: var(--accent); }
+        
+        /* Barra de Busca */
+        .search-container { position: relative; }
+        .search-input {
+            width: 100%;
+            background: var(--primary-light);
+            border: 1px solid #334155;
+            padding: 10px 15px 10px 40px;
+            border-radius: 8px;
+            color: var(--white);
+            outline: none;
+            font-size: 13px;
+        }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-light); }
+
+        /* --- FILTROS --- */
+        .category-scroll {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            overflow-x: auto;
+            background: var(--white);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        
+        .cat-pill {
+            padding: 6px 16px;
+            background: var(--bg);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .cat-pill.active {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.3);
+        }
+
+        /* --- CONTEÚDO --- */
+        .main-content { flex-grow: 1; overflow-y: auto; padding-bottom: 80px; }
+        
+        /* Banner */
+        .promo-banner {
+            margin: 20px;
+            height: 140px;
+            background: linear-gradient(to right, #0f172a, #334155);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-banner::after {
+            content: 'SALE';
+            position: absolute; right: -10px; bottom: -20px;
+            font-size: 80px; font-weight: 900; color: rgba(255,255,255,0.05);
+            transform: rotate(-10deg);
+        }
+
+        /* Grid Produtos */
+        .section-title { font-size: 16px; font-weight: 700; color: var(--primary); margin: 0 20px 10px; }
+        .product-list { padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        .card-img { height: 120px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .card-body { padding: 12px; }
+        .card-cat { font-size: 10px; color: var(--accent); text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+        .card-title { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; height: 36px; overflow: hidden; line-height: 1.4; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .card-price { font-weight: 800; color: var(--primary); }
+        .btn-mini-add {
+            width: 28px; height: 28px; border-radius: 6px;
+            background: var(--primary); color: white; border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-mini-add:active { transform: scale(0.9); }
+
+        /* --- CARRINHO --- */
+        .cart-item {
+            background: var(--white); margin: 15px 20px; padding: 15px;
+            border-radius: 12px; display: flex; gap: 15px; align-items: center;
+            border: 1px solid #e2e8f0;
+        }
+        .qty-controls {
+            display: flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; margin-top: 5px; width: fit-content;
+        }
+        .qty-btn { padding: 2px 8px; background: #f1f5f9; border: none; cursor: pointer; font-weight: bold; color: var(--text-main); }
+        .qty-val { padding: 2px 8px; font-size: 12px; font-weight: 600; background: white; border-left: 1px solid #cbd5e1; border-right: 1px solid #cbd5e1; }
+        
+        .checkout-box {
+            position: absolute; bottom: 70px; left: 0; right: 0;
+            background: var(--white); padding: 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn-primary {
+            background: var(--accent); color: white; padding: 12px 24px;
+            border-radius: 8px; border: none; font-weight: 600; cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        /* --- PERFIL --- */
+        .profile-header {
+            background: var(--primary); padding: 30px 20px; color: white;
+            text-align: center; border-radius: 0 0 24px 24px; margin-bottom: 20px;
+        }
+        .avatar-circle {
+            width: 80px; height: 80px; background: var(--primary-light);
+            border-radius: 50%; border: 3px solid var(--accent);
+            margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;
+            font-size: 32px; color: var(--white);
+        }
+        .menu-group { background: var(--white); margin: 0 20px 15px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+        .menu-row {
+            padding: 16px; border-bottom: 1px solid #f1f5f9;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 14px; color: var(--text-main); font-weight: 500; cursor: pointer;
+        }
+        .menu-row:last-child { border-bottom: none; }
+        .menu-row:hover { background: #f8fafc; }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            position: absolute; bottom: 0; width: 100%; height: 70px;
+            background: var(--white); border-top: 1px solid #e2e8f0;
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 20;
+        }
+        .nav-btn {
+            background: none; border: none; display: flex; flex-direction: column;
+            align-items: center; gap: 4px; color: #94a3b8; cursor: pointer;
+            font-size: 10px; font-weight: 600; padding: 10px;
+        }
+        .nav-btn.active { color: var(--accent); }
+        .nav-icon { font-size: 20px; }
+        .badge {
+            position: absolute; top: 8px; right: 28%;
+            background: var(--danger); color: white; font-size: 10px;
+            width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; display: none;
+        }
+
+        /* UTILITÁRIOS */
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .empty-state { text-align: center; margin-top: 60px; color: var(--text-light); }
+
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+    <!-- HEADER GERAL -->
+    <div id="main-header" class="header">
+        <div class="header-top">
+            <div class="logo">TIMISILG</div>
+            <div>🔔</div>
+        </div>
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Buscar produtos...">
+        </div>
+    </div>
+
+    <!-- PÁGINA 1: HOME -->
+    <div id="home" class="page active main-content">
+        <div class="category-scroll">
+            <div class="cat-pill active" onclick="filterCat('all', this)">Todos</div>
+            <div class="cat-pill" onclick="filterCat('eletronicos', this)">Eletrônicos</div>
+            <div class="cat-pill" onclick="filterCat('moda', this)">Moda</div>
+            <div class="cat-pill" onclick="filterCat('gamer', this)">Gamer</div>
+            <div class="cat-pill" onclick="filterCat('casa', this)">Casa</div>
+        </div>
+
+        <div class="promo-banner">
+            <h2 style="font-size: 24px; margin-bottom: 5px;">Black Friday</h2>
+            <p style="font-size: 14px; opacity: 0.9;">Até 50% OFF em Tech</p>
+        </div>
+
+        <div class="section-title">Populares</div>
+        <div class="product-list" id="product-grid"></div>
+    </div>
+
+    <!-- PÁGINA 2: CARRINHO -->
+    <div id="cart" class="page main-content" style="padding-top: 20px;">
+        <h2 style="padding: 0 20px; color: var(--primary);">Carrinho</h2>
+        <div id="cart-items-container"></div>
+        <div class="checkout-box" id="checkout-box" style="display: none;">
+            <div>
+                <div style="font-size: 12px; color: var(--text-light);">Total estimado</div>
+                <div style="font-size: 22px; font-weight: 800; color: var(--primary);" id="total-price">R$ 0,00</div>
+            </div>
+            <button class="btn-primary" onclick="checkout()">Finalizar</button>
+        </div>
+    </div>
+
+    <!-- PÁGINA 3: PERFIL -->
+    <div id="profile" class="page main-content" style="background: #f8fafc;">
+        <div class="profile-header">
+            <div class="avatar-circle">TS</div>
+            <h2 style="font-size: 20px; margin-bottom: 5px;">TIMISILG</h2>
+            <p style="font-size: 12px; opacity: 0.7;">Membro desde 2025</p>
+        </div>
+        <div class="menu-group">
+            <div class="menu-row"><span>📦 Meus Pedidos</span> <span>›</span></div>
+            <div class="menu-row"><span>📍 Endereços</span> <span>›</span></div>
+            <div class="menu-row"><span>💳 Carteira</span> <span>›</span></div>
+        </div>
+        <div class="menu-group">
+            <div class="menu-row"><span>⚙️ Configurações</span> <span>›</span></div>
+            <div class="menu-row"><span>💬 Suporte</span> <span>›</span></div>
+            <div class="menu-row" style="color: var(--danger);"><span>🚪 Sair</span></div>
+        </div>
+    </div>
+
+    <!-- NAVEGAÇÃO -->
+    <div class="navbar">
+        <button class="nav-btn active" onclick="nav('home', this)">
+            <span class="nav-icon">🏠</span> Início
+        </button>
+        <button class="nav-btn" onclick="nav('cart', this)" style="position: relative;">
+            <span class="nav-icon">🛒</span> Carrinho
+            <div class="badge" id="cart-badge">0</div>
+        </button>
+        <button class="nav-btn" onclick="nav('profile', this)">
+            <span class="nav-icon">👤</span> Conta
+        </button>
+    </div>
+
+</div>
+
+<script>
+    const db = [
+        { id: 1, name: "Smartphone X Pro 256GB", price: 1200.00, icon: "📱", cat: "eletronicos" },
+        { id: 2, name: "Headset Gamer RGB 7.1", price: 250.00, icon: "🎧", cat: "gamer" },
+        { id: 3, name: "Tênis Street Runner", price: 180.00, icon: "👟", cat: "moda" },
+        { id: 4, name: "Smartwatch Sport V2", price: 350.00, icon: "⌚", cat: "eletronicos" },
+        { id: 5, name: "Teclado Mecânico Led", price: 190.00, icon: "⌨️", cat: "gamer" },
+        { id: 6, name: "Cafeteira Expressa", price: 299.00, icon: "☕", cat: "casa" },
+        { id: 7, name: "Moletom Unissex Basic", price: 89.90, icon: "👕", cat: "moda" },
+        { id: 8, name: "Luminária Desk LED", price: 45.00, icon: "💡", cat: "casa" }
+    ];
+
+    let cart = [];
+    let currentFilter = 'all';
+
+    function init() { renderProducts(); renderCart(); }
+
+    function renderProducts() {
+        const grid = document.getElementById('product-grid');
+        const filtered = currentFilter === 'all' ? db : db.filter(p => p.cat === currentFilter);
+        grid.innerHTML = filtered.map(p => `
+            <div class="card">
+                <div class="card-img">${p.icon}</div>
+                <div class="card-body">
+                    <div class="card-cat">${p.cat}</div>
+                    <div class="card-title">${p.name}</div>
+                    <div class="card-footer">
+                        <span class="card-price">R$ ${p.price.toFixed(0)}</span>
+                        <button class="btn-mini-add" onclick="add(${p.id})">＋</button>
+                    </div>
+                </div>
+            </div>`).join('');
+    }
+
+    function filterCat(cat, btn) {
+        currentFilter = cat;
+        document.querySelectorAll('.cat-pill').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+        renderProducts();
+    }
+
+    function add(id) {
+        const item = cart.find(i => i.id === id);
+        if (item) item.qty++; else cart.push({ id, qty: 1 });
+        renderCart();
+        alert("Item adicionado ao carrinho!");
+    }
+
+    function updateQty(id, change) {
+        const item = cart.find(i => i.id === id);
+        if (item) {
+            item.qty += change;
+            if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            renderCart();
+        }
+    }
+
+    function renderCart() {
+        const list = document.getElementById('cart-items-container');
+        const badge = document.getElementById('cart-badge');
+        const footer = document.getElementById('checkout-box');
+        const totalEl = document.getElementById('total-price');
+        const totalQty = cart.reduce((a, b) => a + b.qty, 0);
+        
+        badge.innerText = totalQty;
+        badge.style.display = totalQty > 0 ? 'flex' : 'none';
+
+        if (cart.length === 0) {
+            list.innerHTML = `<div class="empty-state"><h3>Carrinho vazio</h3><p>Adicione itens para começar.</p></div>`;
+            footer.style.display = 'none';
+            return;
+        }
+
+        let total = 0;
+        list.innerHTML = cart.map(item => {
+            const p = db.find(x => x.id === item.id);
+            total += p.price * item.qty;
+            return `
+            <div class="cart-item">
+                <div style="font-size: 28px;">${p.icon}</div>
+                <div style="flex-grow: 1;">
+                    <div style="font-weight: 600; font-size: 14px;">${p.name}</div>
+                    <div style="color: var(--primary); font-weight: 700;">R$ ${p.price.toFixed(2)}</div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="updateQty(${item.id}, -1)">−</button>
+                        <span class="qty-val">${item.qty}</span>
+                        <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        totalEl.innerText = `R$ ${total.toFixed(2)}`;
+        footer.style.display = 'flex';
+    }
+
+    function checkout() {
+        alert("Pedido processado com sucesso! ✅");
+        cart = [];
+        renderCart();
+        nav('home', document.querySelectorAll('.nav-btn')[0]);
+    }
+
+    function nav(pageId, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        const header = document.getElementById('main-header');
+        header.style.display = pageId === 'home' ? 'block' : 'none';
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    init();
+</script>
+</body>
+</html>
